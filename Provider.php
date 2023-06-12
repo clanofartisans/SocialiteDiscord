@@ -115,9 +115,15 @@ class Provider extends AbstractProvider
      */
     protected function mapUserToObject(array $user)
     {
+		if($user['discriminator'] == '0') {
+			$nickname = sprintf('%s', $user['username']);
+		} else {
+			$nickname = sprintf('%s#%s', $user['username'], $user['discriminator']);
+		}
+
         return (new User())->setRaw($user)->map([
             'id'       => $user['id'],
-            'nickname' => sprintf('%s#%s', $user['username'], $user['discriminator']),
+            'nickname' => $nickname,
             'name'     => $user['username'],
             'email'    => $user['email'] ?? null,
             'avatar'   => $this->formatAvatar($user),
